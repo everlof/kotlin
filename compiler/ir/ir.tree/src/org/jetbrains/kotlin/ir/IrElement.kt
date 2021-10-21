@@ -16,25 +16,7 @@
 
 package org.jetbrains.kotlin.ir
 
-import org.jetbrains.kotlin.ir.visitors.IrElementTransformer
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitor
-
-interface IrElement {
-    val startOffset: Int
-    val endOffset: Int
-
-    fun <R, D> accept(visitor: IrElementVisitor<R, D>, data: D): R
-
-    fun <D> acceptChildren(visitor: IrElementVisitor<Unit, D>, data: D): Unit
-
-    fun <D> transform(transformer: IrElementTransformer<D>, data: D): IrElement =
-        accept(transformer, data)
-
-    fun <D> transformChildren(transformer: IrElementTransformer<D>, data: D): Unit
-}
-
-interface IrStatement : IrElement
 
 fun IrStatement.transformStatement(transformer: IrElementTransformerVoid): IrStatement =
     transform(transformer, null) as IrStatement
