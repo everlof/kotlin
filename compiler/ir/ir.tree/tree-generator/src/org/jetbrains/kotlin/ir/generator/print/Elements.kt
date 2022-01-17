@@ -71,7 +71,8 @@ fun printElements(generationPath: File, model: Model) = sequence {
                 }.build())
             }
 
-            if (element.visitorParent != null) {
+            if (element.accept) {
+                assert(element.visitorParent != null)
                 addFunction(FunSpec.builder("accept").apply {
                     addModifiers(KModifier.OVERRIDE)
                     val r = TypeVariableName("R")

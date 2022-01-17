@@ -35,6 +35,7 @@ class Element(
 
     val visitFunName = "visit" + (config.visitorName ?: name).replaceFirstChar(Char::uppercaseChar)
     val visitorParam = config.visitorParam ?: config.category.defaultVisitorParam
+    var accept = config.accept
     val transform = config.transform
     val transformByChildren = config.transformByChildren
 

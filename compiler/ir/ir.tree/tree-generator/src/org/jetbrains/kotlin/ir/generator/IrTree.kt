@@ -618,6 +618,7 @@ object IrTree : AbstractTreeBuilder() {
     }
     val block: ElementConfig by element(Expression) {
         visitorParent = containerExpression
+        accept = true
 
         parent(containerExpression)
 
@@ -814,6 +815,7 @@ object IrTree : AbstractTreeBuilder() {
     }
     val errorExpression: ElementConfig by element(Expression) {
         visitorParent = expression
+        accept = true
 
         parent(expression)
 
@@ -1023,6 +1025,7 @@ object IrTree : AbstractTreeBuilder() {
     val branch: ElementConfig by element(Expression) {
         visitorParent = baseElement
         visitorParam = "branch"
+        accept = true
         transform = true
         transformByChildren = true
 
