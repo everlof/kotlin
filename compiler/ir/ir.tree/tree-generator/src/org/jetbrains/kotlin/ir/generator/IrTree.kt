@@ -25,6 +25,10 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.serialization.deserialization.descriptors.DeserializedContainerSource
 import org.jetbrains.kotlin.types.Variance
 
+// Note the style of the DSL to describe IR elements, which is these things in the following order:
+// 1) config (see properties of ElementConfig)
+// 2) parents
+// 3) fields
 object IrTree : AbstractTreeBuilder() {
     private fun symbol(type: TypeRef) = field("symbol", type)
     private fun descriptor(typeName: String) =
@@ -183,11 +187,15 @@ object IrTree : AbstractTreeBuilder() {
         +field("body", blockBody, mutable = true, isChild = true)
     }
     val declarationContainer: ElementConfig by element(Declaration) {
+        ownsChildren = false
+
         parent(declarationParent)
 
         +listField("declarations", declaration, mutability = List, isChild = true)
     }
     val typeParametersContainer: ElementConfig by element(Declaration) {
+        ownsChildren = false
+
         parent(declaration)
         parent(declarationParent)
 
@@ -448,6 +456,7 @@ object IrTree : AbstractTreeBuilder() {
     }
     val packageFragment: ElementConfig by element(Declaration) {
         visitorParent = baseElement
+        ownsChildren = false
 
         parent(declarationContainer)
         parent(symbolOwner)
@@ -494,6 +503,8 @@ object IrTree : AbstractTreeBuilder() {
         +field("type", irTypeType, mutable = true)
     }
     val statementContainer: ElementConfig by element(Expression) {
+        ownsChildren = false
+
         +listField("statements", statement, mutability = List, isChild = true)
     }
     val body: ElementConfig by element(Expression) {
@@ -832,6 +843,7 @@ object IrTree : AbstractTreeBuilder() {
     val fieldAccessExpression: ElementConfig by element(Expression) {
         visitorParent = declarationReference
         visitorName = "fieldAccess"
+        ownsChildren = false
 
         parent(declarationReference)
 
@@ -880,6 +892,7 @@ object IrTree : AbstractTreeBuilder() {
     val loop: ElementConfig by element(Expression) {
         visitorParent = expression
         visitorParam = "loop"
+        ownsChildren = false
 
         parent(expression)
 

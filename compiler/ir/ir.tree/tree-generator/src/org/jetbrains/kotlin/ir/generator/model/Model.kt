@@ -30,14 +30,13 @@ class Element(
     var isLeaf = false
     var walkableChildren: List<Field> = emptyList()
     val transformableChildren get() = walkableChildren.filter { it.transformable }
-    val acceptChildrenSupers = mutableListOf<Element>()
-    val transformChildrenSupers = mutableListOf<Element>()
 
     val visitFunName = "visit" + (config.visitorName ?: name).replaceFirstChar(Char::uppercaseChar)
     val visitorParam = config.visitorParam ?: config.category.defaultVisitorParam
     var accept = config.accept
     val transform = config.transform
     val transformByChildren = config.transformByChildren
+    val ownsChildren = config.ownsChildren
 
     val generationCallback = config.generationCallback
     val suppressPrint = config.suppressPrint
