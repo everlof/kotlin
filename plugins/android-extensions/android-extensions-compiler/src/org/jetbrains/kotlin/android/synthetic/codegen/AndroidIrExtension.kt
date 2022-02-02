@@ -25,10 +25,7 @@ import org.jetbrains.kotlin.ir.builders.declarations.*
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrExternalPackageFragmentImpl
 import org.jetbrains.kotlin.ir.declarations.impl.IrFactoryImpl
-import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
-import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
+import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.IrClassifierSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
@@ -119,8 +116,8 @@ private class AndroidIrTransformer(val extension: AndroidIrExtension, val plugin
         }
 
     // NOTE: sparse array version intentionally not implemented; this plugin is deprecated
-    private val mapFactory = pluginContext.irBuiltIns.findFunctions(Name.identifier("mutableMapOf"), "kotlin", "collections")
-        .single { it.descriptor.valueParameters.isEmpty() } // unbound - can't use `owner`
+    private val mapFactory = pluginContext.referenceFunctions(FqName("kotlin.collections.mutableMapOf"))
+        .single { it.owner.valueParameters.isEmpty() }
     private val mapGet = pluginContext.irBuiltIns.mapClass.owner.functions
         .single { it.name.asString() == "get" && it.valueParameters.size == 1 }
     private val mapSet = pluginContext.irBuiltIns.mutableMapClass.owner.functions
