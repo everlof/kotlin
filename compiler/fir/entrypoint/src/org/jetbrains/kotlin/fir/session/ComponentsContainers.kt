@@ -45,7 +45,6 @@ import org.jetbrains.kotlin.fir.symbols.FirPhaseManager
 import org.jetbrains.kotlin.fir.types.FirCorrespondingSupertypesCache
 import org.jetbrains.kotlin.fir.types.TypeComponents
 import org.jetbrains.kotlin.incremental.components.LookupTracker
-import org.jetbrains.kotlin.psi
 import org.jetbrains.kotlin.resolve.jvm.modules.JavaModuleResolver
 
 // -------------------------- Required components --------------------------
