@@ -566,11 +566,11 @@ extern "C" id Kotlin_ObjCExport_refToLocalObjC(ObjHeader* obj) {
   return Kotlin_ObjCExport_refToObjCImpl<false>(obj);
 }
 
-extern "C" ALWAYS_INLINE id Kotlin_Interop_refToObjC(ObjHeader* obj) {
+extern "C" ALWAYS_INLINE id Kotlin_Interop_refToObjC(ObjHeader* obj) noexcept {
   return Kotlin_ObjCExport_refToObjCImpl<false>(obj);
 }
 
-extern "C" ALWAYS_INLINE OBJ_GETTER(Kotlin_Interop_refFromObjC, id obj) {
+extern "C" ALWAYS_INLINE OBJ_GETTER(Kotlin_Interop_refFromObjC, id obj) noexcept {
   // TODO: consider removing this function.
   RETURN_RESULT_OF(Kotlin_ObjCExport_refFromObjC, obj);
 }
