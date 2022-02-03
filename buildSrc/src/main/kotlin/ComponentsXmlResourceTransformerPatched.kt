@@ -12,6 +12,7 @@ import shadow.org.apache.tools.zip.ZipOutputStream
 import shadow.org.codehaus.plexus.util.IOUtil
 import shadow.org.codehaus.plexus.util.ReaderFactory
 import shadow.org.codehaus.plexus.util.WriterFactory
+import shadow.org.codehaus.plexus.util.xml.PrettyPrintXMLWriter
 import shadow.org.codehaus.plexus.util.xml.Xpp3Dom
 import shadow.org.codehaus.plexus.util.xml.Xpp3DomBuilder
 import shadow.org.codehaus.plexus.util.xml.Xpp3DomWriter
@@ -22,8 +23,7 @@ import java.util.LinkedHashMap
 /**
  * A resource processor that aggregates plexus `components.xml` files.
  *
- * Fixed version of [com.github.jengelman.gradle.plugins.shadow.transformers.ComponentsXmlResourceTransformer],
- * may be dropped after [the fix in ShadowJAR](https://github.com/johnrengelman/shadow/pull/678/files) will be accepted
+ * Fixed version of [com.github.jengelman.gradle.plugins.shadow.transformers.ComponentsXmlResourceTransformer]
  */
 class ComponentsXmlResourceTransformerPatched : Transformer {
     private val components: MutableMap<String, Xpp3Dom> =
@@ -100,6 +100,14 @@ class ComponentsXmlResourceTransformerPatched : Transformer {
         get() {
             val baos = ByteArrayOutputStream(1024 * 4)
             val writer: Writer = WriterFactory.newXmlWriter(baos)
+            val prettyPrintXMLWriter = PrettyPrintXMLWriter(
+                PrintWriter(writer),
+                "  ",
+                "\n",
+                null,
+                null
+            )
+
             try {
                 val dom = Xpp3Dom("component-set")
                 val componentDom = Xpp3Dom("components")
@@ -107,7 +115,7 @@ class ComponentsXmlResourceTransformerPatched : Transformer {
                 for (component in components.values) {
                     componentDom.addChild(component)
                 }
-                Xpp3DomWriter.write(writer, dom)
+                Xpp3DomWriter.write(prettyPrintXMLWriter, dom)
             } finally {
                 writer.close()
             }
