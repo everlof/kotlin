@@ -5,9 +5,7 @@
 
 package org.jetbrains.kotlin.ir.generator
 
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.*
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.InlineClassRepresentation
 import org.jetbrains.kotlin.descriptors.Modality
@@ -39,10 +37,45 @@ object IrTree : AbstractTreeBuilder() {
     override val baseElement: ElementConfig by element(Other, name = "element") {
         transformByChildren = true
 
-        parent(type(Packages.tree, "IrElementBase"))
-
         +field("startOffset", int)
         +field("endOffset", int)
+
+        generationCallback = {
+            val r = TypeVariableName("R")
+            val d = TypeVariableName("D")
+            addFunction(
+                FunSpec.builder("accept")
+                    .addModifiers(KModifier.ABSTRACT)
+                    .addTypeVariables(listOf(r, d))
+                    .addParameter("visitor", elementVisitorType.toPoet().tryParameterizedBy(r, d))
+                    .addParameter("data", d)
+                    .returns(r)
+                    .build()
+            )
+            addFunction(
+                FunSpec.builder("acceptChildren")
+                    .addTypeVariables(listOf(d))
+                    .addParameter("visitor", elementVisitorType.toPoet().tryParameterizedBy(Unit::class.asTypeName(), d))
+                    .addParameter("data", d)
+                    .build()
+            )
+            addFunction(
+                FunSpec.builder("transform")
+                    .addTypeVariables(listOf(d))
+                    .addParameter("transformer", elementTransformerType.toPoet().tryParameterizedBy(d))
+                    .addParameter("data", d)
+                    .returns(type(Packages.tree, "IrElement").toPoet())
+                    .addStatement("return accept(transformer, data)")
+                    .build()
+            )
+            addFunction(
+                FunSpec.builder("transformChildren")
+                    .addTypeVariables(listOf(d))
+                    .addParameter("transformer", elementTransformerType.toPoet().tryParameterizedBy(d))
+                    .addParameter("data", d)
+                    .build()
+            )
+        }
     }
     override val abstractElement: ElementConfig by element(Other) {
         typeKind = TypeKind.Class
