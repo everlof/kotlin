@@ -189,9 +189,7 @@ private fun TypeSpec.Builder.generateElementKDoc(element: Element) {
         append(if (element.isLeaf) "leaf" else "non-leaf")
         appendLine(" IR tree element.")
 
-        element.propertyName?.let {
-            append("@sample $it")
-        }
+        append("@sample ${element.propertyName}")
     })
 }
 

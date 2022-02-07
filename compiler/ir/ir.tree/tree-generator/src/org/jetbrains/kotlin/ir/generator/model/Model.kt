@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.ir.generator.config.FieldConfig
 import org.jetbrains.kotlin.ir.generator.util.*
 
 class Element(
-    config: ElementConfig?,
+    config: ElementConfig,
     val name: String,
     val packageName: String,
     val params: List<TypeVariable>,
@@ -21,7 +21,7 @@ class Element(
     var otherParents: List<ClassRef<*>> = emptyList()
     var visitorParent: ElementRef? = null
     var transformerReturnType: Element? = null
-    val targetKind = config?.typeKind
+    val targetKind = config.typeKind
     var kind: Kind? = null
     val typeName
         get() = elementName2typeName(name)
@@ -33,15 +33,14 @@ class Element(
     val acceptChildrenSupers = mutableListOf<Element>()
     val transformChildrenSupers = mutableListOf<Element>()
 
-    val nameInVisitor = config?.visitorName ?: name
-    val visitFunName = "visit" + nameInVisitor.replaceFirstChar(Char::uppercaseChar)
-    val visitorParam = config?.visitorParam ?: config?.category?.defaultVisitorParam ?: "element"
-    val transform = config?.transform ?: false
-    val transformByChildren = config?.transformByChildren ?: false
+    val visitFunName = "visit" + (config.visitorName ?: name).replaceFirstChar(Char::uppercaseChar)
+    val visitorParam = config.visitorParam ?: config.category.defaultVisitorParam
+    val transform = config.transform
+    val transformByChildren = config.transformByChildren
 
-    val generationCallback = config?.generationCallback
-    val suppressPrint = config?.suppressPrint ?: false
-    val propertyName = config?.propertyName
+    val generationCallback = config.generationCallback
+    val suppressPrint = config.suppressPrint
+    val propertyName = config.propertyName
 
     override fun toString() = name
 
